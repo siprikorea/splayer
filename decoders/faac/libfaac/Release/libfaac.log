@@ -1,0 +1,2 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1357,5): warning MSB8012: TargetPath(D:\My Codes\siprikorea\splayer\Release\libfaac.lib) does not match the Library's OutputFile property value (D:\My Codes\siprikorea\splayer\decoders\faac\libfaac\Release\libfaac.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+  libfaac.vcxproj -> D:\My Codes\siprikorea\splayer\Release\libfaac.lib
