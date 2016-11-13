@@ -66,6 +66,7 @@ BOOL CSplayerDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+
 	SetIcon(m_hIcon, TRUE);
 
 	SetIcon(m_hIcon, FALSE);
@@ -78,17 +79,18 @@ BOOL CSplayerDlg::OnInitDialog()
 
 	LVCOLUMN col;
 
-	int nCol;
+	col.mask = LVCF_TEXT;
 
-	col.mask = LVCF_FMT | LVCF_TEXT | LVCF_WIDTH;
+	col.pszText = _T("");
 
-	col.fmt = LVCFMT_LEFT;
+	m_PlayList.InsertColumn(0, &col);
 
-	col.cx = 120;
+	m_PlayList.ModifyStyle(0, LVS_SHOWSELALWAYS);
 
-	col.pszText = _T("Name");
+	m_PlayList.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
 
-	nCol = m_PlayList.InsertColumn(0, &col);
+
+	UpdatePlayList();
 
 
 	return TRUE;
@@ -102,6 +104,20 @@ BOOL CSplayerDlg::OnInitDialog()
 void CSplayerDlg::UpdatePlayList()
 {
 	m_PlayList.DeleteAllItems();
+
+
+	LVCOLUMN col;
+
+	col.mask = LVCF_FMT | LVCF_TEXT;
+
+	col.fmt = LVCFMT_LEFT;
+
+	col.pszText = _T("Name");
+
+	m_PlayList.SetColumn(0, &col);
+
+
+	m_PlayList.SetColumnWidth(0, LVSCW_AUTOSIZE_USEHEADER);
 
 
 	auto playList = m_PlayCtrl.GetPlayList();
@@ -123,6 +139,33 @@ void CSplayerDlg::UpdatePlayList()
 		m_PlayList.InsertItem(&lvItem);
 	}
 }
+
+
+/************************************************************
+*	@brief		Update selection
+*	@retval		Nothing
+************************************************************/
+void CSplayerDlg::UpdateSelect()
+{
+	// Release selected item
+	POSITION pos = m_PlayList.GetFirstSelectedItemPosition();
+
+	int nSel = -1;
+
+	if (pos)
+	{
+		nSel = m_PlayList.GetNextSelectedItem(pos);
+	}
+
+	m_PlayList.SetItemState(nSel, 0, LVIS_SELECTED);
+
+
+	// Select item
+	int nPos = m_PlayCtrl.GetPlayPos();
+
+	m_PlayList.SetItemState(nPos, LVIS_SELECTED, LVIS_SELECTED);
+}
+
 
 
 /************************************************************
@@ -170,6 +213,9 @@ HCURSOR CSplayerDlg::OnQueryDragIcon()
 void CSplayerDlg::OnBnClickedPrev()
 {
 	m_PlayCtrl.Prev();
+
+
+	UpdateSelect();
 }
 
 
@@ -189,9 +235,7 @@ void CSplayerDlg::OnBnClickedPlay()
 	}
 
 
-	m_PlayCtrl.SetPlayPos(nSel);
-
-	m_PlayCtrl.Play();
+	m_PlayCtrl.Play(nSel);
 }
 
 
@@ -212,6 +256,9 @@ void CSplayerDlg::OnBnClickedStop()
 void CSplayerDlg::OnBnClickedNext()
 {
 	m_PlayCtrl.Next();
+
+
+	UpdateSelect();
 }
 
 

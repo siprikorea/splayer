@@ -27,6 +27,8 @@ protected:
 
 	void				UpdatePlayList();
 
+	void				UpdateSelect();
+
 	afx_msg void		OnBnClickedPrev();
 
 	afx_msg void		OnBnClickedPlay();

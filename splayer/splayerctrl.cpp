@@ -53,16 +53,6 @@ std::list<CString> CSplayerCtrl::GetPlayList()
 
 
 /************************************************************
-*	@brief		Set play position
-*	@retval		Nothing
-************************************************************/
-void CSplayerCtrl::SetPlayPos(int nPos)
-{
-	m_PlayPos = nPos;
-}
-
-
-/************************************************************
 *	@brief		Get play position
 *	@retval		Nothing
 ************************************************************/
@@ -78,17 +68,7 @@ int CSplayerCtrl::GetPlayPos()
 ************************************************************/
 void CSplayerCtrl::Prev()
 {
-	if (m_PlayPos <= 0)
-	{
-		m_PlayPos = 0;
-
-		return;
-	}
-
-
-	m_PlayPos--;
-
-	Play();
+	Play(m_PlayPos - 1);
 }
 
 
@@ -96,12 +76,14 @@ void CSplayerCtrl::Prev()
 *	@brief		On play button clicked
 *	@retval		Nothing
 ************************************************************/
-void CSplayerCtrl::Play()
+void CSplayerCtrl::Play(int nPos)
 {
-	if (m_PlayPos < 0 || m_PlayPos >= m_PlayList.size())
+	if (nPos < 0 || nPos >= m_PlayList.size())
 
 		return;
 
+
+	m_PlayPos = nPos;
 
 	auto it = m_PlayList.begin();
 
@@ -130,15 +112,5 @@ void CSplayerCtrl::Stop()
 ************************************************************/
 void CSplayerCtrl::Next()
 {
-	if (m_PlayPos >= m_PlayList.size() - 1)
-	{
-		m_PlayPos = m_PlayList.size() - 1;
-
-		return;
-	}
-
-
-	m_PlayPos++;
-
-	Play();
+	Play(m_PlayPos + 1);
 }

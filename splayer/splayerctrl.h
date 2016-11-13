@@ -20,14 +20,12 @@ public:
 	std::list<CString>	GetPlayList();
 
 
-	void				SetPlayPos(int nPos);
-
 	int					GetPlayPos();
 
 
 	void				Prev();
 
-	void				Play();
+	void				Play(int nPos);
 
 	void				Stop();
 
