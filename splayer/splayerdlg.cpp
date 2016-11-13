@@ -1,60 +1,134 @@
-
-// splayerDlg.cpp : 구현 파일
-//
-
 #include "stdafx.h"
 #include "splayer.h"
-#include "splayerDlg.h"
+#include "splayerdlg.h"
 #include "afxdialogex.h"
-#include "../libzplay/libzplay.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-using namespace libZPlay;
-
-
-ZPlay* g_ZPlay = NULL;
-
-
 BEGIN_MESSAGE_MAP(CSplayerDlg, CDialogEx)
+	ON_BN_CLICKED(IDC_PREV, &CSplayerDlg::OnBnClickedPrev)
+	ON_BN_CLICKED(IDC_PLAY, &CSplayerDlg::OnBnClickedPlay)
+	ON_BN_CLICKED(IDC_STOP, &CSplayerDlg::OnBnClickedStop)
+	ON_BN_CLICKED(IDC_NEXT, &CSplayerDlg::OnBnClickedNext)
+	ON_WM_DROPFILES()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 END_MESSAGE_MAP()
 
 
+/************************************************************
+*	@brief		Constructor
+*	@retval		Nothing
+************************************************************/
 CSplayerDlg::CSplayerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_SPLAYER_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
-	g_ZPlay = CreateZPlay();
 }
 
+
+/************************************************************
+*	@brief		Destructor
+*	@retval		Nothing
+************************************************************/
 CSplayerDlg::~CSplayerDlg()
 {
-	g_ZPlay->Release();
 }
 
+
+/************************************************************
+*	@brief		Do Data Exchange
+*	@param[in]	pDX				Data Exchange
+*	@retval		Nothing
+************************************************************/
 void CSplayerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_SELECT, m_Select);
+	DDX_Control(pDX, IDC_PLAYLIST, m_PlayList);
+	DDX_Control(pDX, IDC_PREV, m_Prev);
+	DDX_Control(pDX, IDC_PLAY, m_Play);
+	DDX_Control(pDX, IDC_STOP, m_Stop);
+	DDX_Control(pDX, IDC_NEXT, m_Next);
 }
 
 
+/************************************************************
+*	@brief		On Initalize Dialog
+*	@retval		TRUE
+*	@retval		FALSE
+************************************************************/
 BOOL CSplayerDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
 	SetIcon(m_hIcon, TRUE);
+
 	SetIcon(m_hIcon, FALSE);
+
+
+	DragAcceptFiles();
+
+	m_PlayList.DragAcceptFiles();
+
+
+	LVCOLUMN col;
+
+	int nCol;
+
+	col.mask = LVCF_FMT | LVCF_TEXT | LVCF_WIDTH;
+
+	col.fmt = LVCFMT_LEFT;
+
+	col.cx = 120;
+
+	col.pszText = _T("Name");
+
+	nCol = m_PlayList.InsertColumn(0, &col);
 
 
 	return TRUE;
 }
 
+
+/************************************************************
+*	@brief		Update play list
+*	@retval		Nothing
+************************************************************/
+void CSplayerDlg::UpdatePlayList()
+{
+	m_PlayList.DeleteAllItems();
+
+
+	auto playList = m_PlayCtrl.GetPlayList();
+
+	int nItem = 0;
+
+	for (auto it = playList.begin(); it != playList.end(); it++)
+	{
+		LVITEM	lvItem;
+
+		lvItem.mask		= LVIF_TEXT;
+
+		lvItem.iItem	= nItem++;
+
+		lvItem.iSubItem	= 0;
+
+		lvItem.pszText	= PathFindFileName(*it);
+
+		m_PlayList.InsertItem(&lvItem);
+	}
+}
+
+
+/************************************************************
+*	@brief		On paint
+*	@retval		Nothing
+************************************************************/
 void CSplayerDlg::OnPaint()
 {
 	if (IsIconic())
@@ -78,7 +152,107 @@ void CSplayerDlg::OnPaint()
 	}
 }
 
+
+/************************************************************
+*	@brief		On query drag icon
+*	@retval		Nothing
+************************************************************/
 HCURSOR CSplayerDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+
+/************************************************************
+*	@brief		On previous button clicked
+*	@retval		Nothing
+************************************************************/
+void CSplayerDlg::OnBnClickedPrev()
+{
+	m_PlayCtrl.Prev();
+}
+
+
+/************************************************************
+*	@brief		On play button clicked
+*	@retval		Nothing
+************************************************************/
+void CSplayerDlg::OnBnClickedPlay()
+{
+	POSITION pos = m_PlayList.GetFirstSelectedItemPosition();
+
+	int nSel = -1;
+
+	if (pos)
+	{
+		nSel = m_PlayList.GetNextSelectedItem(pos);
+	}
+
+
+	m_PlayCtrl.SetPlayPos(nSel);
+
+	m_PlayCtrl.Play();
+}
+
+
+/************************************************************
+*	@brief		On stop button clicked
+*	@retval		Nothing
+************************************************************/
+void CSplayerDlg::OnBnClickedStop()
+{
+	m_PlayCtrl.Stop();
+}
+
+
+/************************************************************
+*	@brief		On next button clicked
+*	@retval		Nothing
+************************************************************/
+void CSplayerDlg::OnBnClickedNext()
+{
+	m_PlayCtrl.Next();
+}
+
+
+/************************************************************
+*	@brief		On drop files
+*	@retval		Nothing
+************************************************************/
+void CSplayerDlg::OnDropFiles(HDROP hDropInfo)
+{
+	CString strFile;
+
+	DWORD nBuffer = 0;
+
+
+	std::list<CString> playList;
+
+
+	// Get the number of files dropped
+	int nFilesDropped = DragQueryFile(hDropInfo, 0xFFFFFFFF, NULL, 0);
+
+	for (int i = 0; i<nFilesDropped; i++)
+	{
+		// Get the buffer size of the file.
+		nBuffer = DragQueryFile(hDropInfo, i, NULL, 0);
+
+		// Get path and name of the file
+		DragQueryFile(hDropInfo, i, strFile.GetBuffer(nBuffer + 1), nBuffer + 1);
+
+		strFile.ReleaseBuffer();
+
+		playList.insert(playList.end(), strFile);
+	}
+
+
+	// Free the memory block containing the dropped-file information
+	DragFinish(hDropInfo);
+
+
+	m_PlayCtrl.AddPlayList(playList);
+
+
+	// Update play list
+	UpdatePlayList();
 }

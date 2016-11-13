@@ -1,25 +1,61 @@
 #pragma once
 
 
+#include <afxcmn.h>
+#include <afxwin.h>
+#include <list>
+#include "splayerctrl.h"
+
+
 class CSplayerDlg : public CDialogEx
 {
 public:
 	CSplayerDlg(CWnd* pParent = NULL);
+
 	virtual ~CSplayerDlg();
 
-#ifdef AFX_DESIGN_TIME
+
 	enum { IDD = IDD_SPLAYER_DIALOG };
-#endif
 
 
 protected:
 	DECLARE_MESSAGE_MAP()
 
-	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPaint();
-	afx_msg HCURSOR OnQueryDragIcon();
+	virtual void		DoDataExchange(CDataExchange* pDX);
+
+	virtual BOOL		OnInitDialog();
+
+	void				UpdatePlayList();
+
+	afx_msg void		OnBnClickedPrev();
+
+	afx_msg void		OnBnClickedPlay();
+
+	afx_msg void		OnBnClickedStop();
+
+	afx_msg void		OnBnClickedNext();
+
+	afx_msg void		OnDropFiles(HDROP hDropInfo);
+
+	afx_msg void		OnPaint();
+
+	afx_msg HCURSOR		OnQueryDragIcon();
+
 
 protected:
-	HICON m_hIcon;
+	HICON				m_hIcon;
+
+	CStatic				m_Select;
+
+	CListCtrl			m_PlayList;
+	
+	CButton				m_Prev;
+	
+	CButton				m_Play;
+	
+	CButton				m_Stop;
+	
+	CButton				m_Next;
+
+	CSplayerCtrl		m_PlayCtrl;
 };
