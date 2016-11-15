@@ -93,7 +93,28 @@ BOOL CSplayerDlg::OnInitDialog()
 	UpdatePlayList();
 
 
+	m_Play.SetSkinPng(IDB_PLAY, IDB_PLAY);
+
 	return TRUE;
+}
+
+
+/************************************************************
+*	@brief		Get selected item
+*	@retval		Selected item
+************************************************************/
+int CSplayerDlg::GetSelectedItem()
+{
+	POSITION pos = m_PlayList.GetFirstSelectedItemPosition();
+
+	int nSel = -1;
+
+	if (pos)
+	{
+		nSel = m_PlayList.GetNextSelectedItem(pos);
+	}
+
+	return nSel;
 }
 
 
@@ -148,14 +169,7 @@ void CSplayerDlg::UpdatePlayList()
 void CSplayerDlg::UpdateSelect()
 {
 	// Release selected item
-	POSITION pos = m_PlayList.GetFirstSelectedItemPosition();
-
-	int nSel = -1;
-
-	if (pos)
-	{
-		nSel = m_PlayList.GetNextSelectedItem(pos);
-	}
+	int nSel = GetSelectedItem();
 
 	m_PlayList.SetItemState(nSel, 0, LVIS_SELECTED);
 
@@ -214,7 +228,6 @@ void CSplayerDlg::OnBnClickedPrev()
 {
 	m_PlayCtrl.Prev();
 
-
 	UpdateSelect();
 }
 
@@ -225,15 +238,7 @@ void CSplayerDlg::OnBnClickedPrev()
 ************************************************************/
 void CSplayerDlg::OnBnClickedPlay()
 {
-	POSITION pos = m_PlayList.GetFirstSelectedItemPosition();
-
-	int nSel = -1;
-
-	if (pos)
-	{
-		nSel = m_PlayList.GetNextSelectedItem(pos);
-	}
-
+	int nSel = GetSelectedItem();
 
 	m_PlayCtrl.Play(nSel);
 }
@@ -256,7 +261,6 @@ void CSplayerDlg::OnBnClickedStop()
 void CSplayerDlg::OnBnClickedNext()
 {
 	m_PlayCtrl.Next();
-
 
 	UpdateSelect();
 }

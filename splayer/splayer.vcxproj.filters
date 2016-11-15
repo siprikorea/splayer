@@ -36,6 +36,9 @@
     <ClInclude Include="splayerctrl.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="splayerbtn.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="splayer.cpp">
@@ -48,6 +51,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="splayerctrl.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="splayerbtn.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,6 +69,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\splayer.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\..\..\..\My Torrents\play.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="play.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\play.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

@@ -183,6 +183,7 @@
   <ItemGroup>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="splayer.h" />
+    <ClInclude Include="splayerbtn.h" />
     <ClInclude Include="splayerctrl.h" />
     <ClInclude Include="splayerdlg.h" />
     <ClInclude Include="stdafx.h" />
@@ -190,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="splayer.cpp" />
+    <ClCompile Include="splayerbtn.cpp" />
     <ClCompile Include="splayerctrl.cpp" />
     <ClCompile Include="splayerdlg.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -206,6 +208,9 @@
     <None Include="res\splayer.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\My Torrents\play.png" />
+    <Image Include="play.png" />
+    <Image Include="res\play.png" />
     <Image Include="res\splayer.ico" />
   </ItemGroup>
   <ItemGroup>

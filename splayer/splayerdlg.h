@@ -4,6 +4,7 @@
 #include <afxcmn.h>
 #include <afxwin.h>
 #include <list>
+#include "splayerbtn.h"
 #include "splayerctrl.h"
 
 
@@ -24,6 +25,8 @@ protected:
 	virtual void		DoDataExchange(CDataExchange* pDX);
 
 	virtual BOOL		OnInitDialog();
+
+	int					GetSelectedItem();
 
 	void				UpdatePlayList();
 
@@ -53,7 +56,7 @@ protected:
 	
 	CButton				m_Prev;
 	
-	CButton				m_Play;
+	CSplayerButton		m_Play;
 	
 	CButton				m_Stop;
 	
